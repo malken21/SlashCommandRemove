@@ -1,0 +1,2 @@
+# SlashCommandRemove
+スラッシュコマンドを削除するBot
