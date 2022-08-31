@@ -10,18 +10,17 @@ client.on('ready', () => {
 });
 
 client.on("interactionCreate", interaction => {
-  if (!interaction.isCommand()) {
-    return;
+  if (interaction.isCommand()||interaction.isContextMenu()) {
+    const embed = new MessageEmbed()
+      .setColor('ffa500')
+      .setTitle(`コマンド削除完了`)
+      .setDescription(`コマンド名:${interaction.commandName}\nコマンドID:${interaction.commandId}`)//埋め込みを生成
+    interaction.reply({ embeds: [embed] });//Discordに埋め込みで削除したコマンドを表示
+    console.log(`コマンド名:${interaction.commandName}\nコマンドID:${interaction.commandId}\nコマンドを削除しました`);//ログに削除したコマンドを表示
+    client.application.commands.delete(interaction.commandId).catch(error => {
+      if (error) {
+        client.guilds.cache.get(interaction.guildId).commands.delete(interaction.commandId);
+      }
+    })
   }
-  const embed = new MessageEmbed()
-    .setColor('ffa500')
-    .setTitle(`コマンド削除完了`)
-    .setDescription(`コマンド名:${interaction.commandName}\nコマンドID:${interaction.commandId}`)//埋め込みを生成
-  interaction.reply({ embeds: [embed] });//Discordに埋め込みで削除したコマンドを表示
-  console.log(`コマンド名:${interaction.commandName}\nコマンドID:${interaction.commandId}\nコマンドを削除しました`);//ログに削除したコマンドを表示
-  client.application.commands.delete(interaction.commandId).catch(error => {
-    if (error) {
-      client.guilds.cache.get(interaction.guildId).commands.delete(interaction.commandId);
-    }
-  })
 });
